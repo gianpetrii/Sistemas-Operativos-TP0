@@ -20,6 +20,8 @@ int main(void)
 	// Escribi: "Hola! Soy un log"
 	log_info(logger, "Hola! Soy un log");
 
+
+
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
 	config = iniciar_config();
@@ -27,7 +29,16 @@ int main(void)
 	// Usando el config creado previamente, leemos los valores del config y los 
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
 
-	// Loggeamos el valor de config
+	// Leo puerto y ip para la conexion por mas que no lo diga guia de tp xq lo pide comentario
+	// de arriba
+	puerto = config_get_string_value(config, "PUERTO");
+	ip = config_get_string_value(config, "IP");
+	log_info(logger, "Lei el IP = %s y el PUERTO %s\n", ip, puerto);
+
+	// Por otro lado leo el valor de CLAVE en tp0.config
+	valor = config_get_string_value(config, "CLAVE");
+	log_info(logger, "Lei la CLAVE = %s\n", valor);
+
 
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
@@ -68,6 +79,11 @@ t_log* iniciar_logger(void)
 t_config* iniciar_config(void)
 {
 	t_config* nuevo_config;
+	// hago lo mismo que con la creacion del log de testear por errores
+	if((nuevo_config = config_create("./tp0.config")) == NULL) {
+		printf("No se pudo levantar el config");
+		exit(2);
+	}
 
 	return nuevo_config;
 }
@@ -107,5 +123,10 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
 	// Pregunto si tengo un logger existente y si lo tengo lo destruyo
 	if (logger != NULL){
 		log_destroy(logger);
+	}
+
+	// Pregunto si tengo un config existente y si lo tengo lo destruyo
+	if (config != NULL){
+		config_destroy(config);
 	}
 }
